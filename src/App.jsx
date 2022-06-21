@@ -6,25 +6,30 @@ import {
 import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import {initialState,langContext} from './context/lang-context';
+import {logged,logInContext} from './context/login';
 
 
 
 function App() {
   const [language,setLanguage] = useState(initialState);
+  const [logIn,setLogIn] = useState(logged);
 
   const changeLanguage = (language) => setLanguage(prevLanguage=>({...prevLanguage,language}));
+  const verifyLogIn = ()=>setLogIn(true);
 
   return (
     <langContext.Provider value={{...language,changeLanguage}}>
-      <Router>
-        <NavBar/>
-        <Routes>
-          <Route path='/' element={<Home />}/>
-          <Route path='/pokemon/:pokemon' element={<Pokemon />} />
-          <Route path='/type/:type' element={<Type />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-      </Router>  
+      <logInContext.Provider value={(logIn,verifyLogIn)}>
+        <Router>
+          <NavBar/>
+          <Routes>
+            <Route path='/' element={<Home />}/>
+            <Route path='/pokemon/:pokemon' element={<Pokemon />} />
+            <Route path='/type/:type' element={<Type />} />
+            <Route path='*' element={<NotFound />} />
+          </Routes>
+        </Router>  
+      </logInContext.Provider>
     </langContext.Provider>
     
   );
@@ -63,18 +68,24 @@ function NavBar() {
         <option value="en">en</option>
       </select>
       <Link to={`/`}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png" className='img-logo' alt="logo pokemon" /></Link>
-      <SearchBar />
+      <SearchBar/>
     </div>
   )
 }
 
 function Home() {
   const {messages,language} = useContext(langContext);
+  
+
+  // function pressLogIn(){
+  //   verifyLogIn();
+  // }
   // const ctx = useContext(langContext);
   // console.log(ctx);
   return (
     <>
       <h1>{messages.searchPokemon[language]}</h1>
+      <button>LogIn</button>
     </>
   )
 }
