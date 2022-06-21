@@ -104,6 +104,7 @@ function Pokemon() {
   return (
     <div className='pokemon'>
         {type}
+        ciao
         <h1>{json.name}</h1>
         <img src={json.sprites.front_default} alt="" className='pokemon-profile' />
         <h3>Tipo</h3>
