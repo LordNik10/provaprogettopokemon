@@ -5,18 +5,28 @@ import {
 } from 'react-router-dom'; 
 import { useState, useContext } from 'react';
 import { useEffect } from 'react';
+import {initialState,langContext} from './context/lang-context';
+
+
 
 function App() {
+  const [language,setLanguage] = useState(initialState);
+
+  const changeLanguage = (language) => setLanguage(prevLanguage=>({...prevLanguage,language}));
+
   return (
-    <Router>
-      <NavBar/>
-      <Routes>
-        <Route path='/' element={<Home />}/>
-        <Route path='/pokemon/:pokemon' element={<Pokemon />} />
-        <Route path='/type/:type' element={<Type />} />
-        <Route path='/notFound' element={<NotFound />} />
-      </Routes>
-    </Router>
+    <langContext.Provider value={{...language,changeLanguage}}>
+      <Router>
+        <NavBar/>
+        <Routes>
+          <Route path='/' element={<Home />}/>
+          <Route path='/pokemon/:pokemon' element={<Pokemon />} />
+          <Route path='/type/:type' element={<Type />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+      </Router>  
+    </langContext.Provider>
+    
   );
 }
 
@@ -38,9 +48,20 @@ function SearchBar() {
 }
 
 function NavBar() {
+  const {changeLanguage} = useContext(langContext);
+
+
+  function handleLanguage(e){
+    e.preventDefault();
+    changeLanguage(e.target.value);
+  }
 
   return (
     <div className='navbar'>
+      <select onChange={handleLanguage}>
+        <option value="it">it</option>
+        <option value="en">en</option>
+      </select>
       <Link to={`/`}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png" className='img-logo' alt="logo pokemon" /></Link>
       <SearchBar />
     </div>
@@ -48,9 +69,12 @@ function NavBar() {
 }
 
 function Home() {
+  const {messages,language} = useContext(langContext);
+  // const ctx = useContext(langContext);
+  // console.log(ctx);
   return (
     <>
-      <h1>Search your pokemon</h1>
+      <h1>{messages.searchPokemon[language]}</h1>
     </>
   )
 }
@@ -69,17 +93,17 @@ function Pokemon() {
       setIsLoading(false);
       updateJson(json);
       setType([]);
-      for (let i=0;i<json.types.length;i++){
-        let obj = {
-          number: 0,
-          nome:""
-        }
-        let number = json.types[i].type.url.split("/");
-        obj.number=number[6];  
-        obj.nome=json.types[i].type.name;
-        console.log(obj);
-        setType(prevType=>[{...prevType},obj]);
-      }
+      // for (let i=0;i<json.types.length;i++){
+      //   let obj = {
+      //     number: 0,
+      //     nome:""
+      //   }
+      //   let number = json.types[i].type.url.split("/");
+      //   obj.number=number[6];  
+      //   obj.nome=json.types[i].type.name;
+      //   console.log(obj);
+      //   setType(prevType=>[{...prevType},obj]);
+      // }
 
       console.log(type);
       
@@ -104,7 +128,6 @@ function Pokemon() {
   return (
     <div className='pokemon'>
         {type}
-        ciao
         <h1>{json.name}</h1>
         <img src={json.sprites.front_default} alt="" className='pokemon-profile' />
         <h3>Tipo</h3>
