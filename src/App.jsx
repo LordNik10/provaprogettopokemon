@@ -7,6 +7,7 @@ import { useState, useContext } from 'react';
 import { useEffect } from 'react';
 import {initialState,langContext} from './context/lang-context';
 import {logged,logInContext} from './context/login';
+import PokemonList from './components/PokemonList';
 
 
 
@@ -19,15 +20,19 @@ function App() {
 
   return (
     <langContext.Provider value={{...language,changeLanguage}}>
-      <logInContext.Provider value={(logIn,verifyLogIn)}>
+      <logInContext.Provider value={{logIn,verifyLogIn}}>
         <Router>
-          <NavBar/>
-          <Routes>
-            <Route path='/' element={<Home />}/>
-            <Route path='/pokemon/:pokemon' element={<Pokemon />} />
-            <Route path='/type/:type' element={<Type />} />
-            <Route path='*' element={<NotFound />} />
-          </Routes>
+          <div className="container">
+            <NavBar/>
+            <Routes>
+              <Route path='/' element={<Home />}/>
+              <Route path='/pokemon/:pokemon' element={<Pokemon />} />
+              <Route path='/type/:type' element={<Type />} />
+              <Route path='/pokemon/' element={<PokemonList/>}/>
+              <Route path='*' element={<NotFound />} />
+            </Routes>  
+          </div>
+          
         </Router>  
       </logInContext.Provider>
     </langContext.Provider>
@@ -47,14 +52,14 @@ function SearchBar() {
   return (
     <div className='navbar-search'>
       <i className="fas fa-search"></i>
-      <input type="text" className='searchbar' onKeyDown={search} />
+      <input type="text" className='searchbar' onKeyDown={search} placeholder='Cerca pokemon'/>
     </div>
   )
 }
 
 function NavBar() {
   const {changeLanguage} = useContext(langContext);
-
+  const {logIn} = useContext(logInContext);
 
   function handleLanguage(e){
     e.preventDefault();
@@ -68,24 +73,41 @@ function NavBar() {
         <option value="en">en</option>
       </select>
       <Link to={`/`}><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png" className='img-logo' alt="logo pokemon" /></Link>
-      <SearchBar/>
+      {logIn && <SearchBar/>}
     </div>
   )
 }
 
 function Home() {
   const {messages,language} = useContext(langContext);
-  
-
-  // function pressLogIn(){
-  //   verifyLogIn();
-  // }
-  // const ctx = useContext(langContext);
+  const {logIn, verifyLogIn} = useContext(logInContext);
+  // const ctx = useContext(logInContext);
   // console.log(ctx);
+
+
   return (
     <>
       <h1>{messages.searchPokemon[language]}</h1>
-      <button>LogIn</button>
+      <button onClick={verifyLogIn}>LogIn</button>
+      {logIn && <div className='features-container'>
+        
+          <Link to={`/pokemon/`} className='features-link'>
+            <div className="features">
+              Pokemon List
+            </div>
+          </Link>  
+
+          <Link to={`*`} className='features-link'>
+            <div className="features">
+              Battle
+            </div>
+          </Link> 
+       
+        
+      </div>
+        
+      }
+      
     </>
   )
 }
@@ -94,7 +116,7 @@ function Pokemon() {
   const {pokemon} = useParams();
   const [json,updateJson] = useState();
   const [isLoading,setIsLoading] = useState(true);
-  const [type,setType] = useState([]);
+  const [displayMoves,setDisplayMoves] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -103,20 +125,6 @@ function Pokemon() {
     .then(json=>{
       setIsLoading(false);
       updateJson(json);
-      setType([]);
-      // for (let i=0;i<json.types.length;i++){
-      //   let obj = {
-      //     number: 0,
-      //     nome:""
-      //   }
-      //   let number = json.types[i].type.url.split("/");
-      //   obj.number=number[6];  
-      //   obj.nome=json.types[i].type.name;
-      //   console.log(obj);
-      //   setType(prevType=>[{...prevType},obj]);
-      // }
-
-      console.log(type);
       
     })
     .catch(error=>{
@@ -132,27 +140,29 @@ function Pokemon() {
   }
 
 
-  // function showMoves() {
-  //   setDisplayMoves(display => !display);
-  // }
+
+  function showMoves() {
+    if (displayMoves===false){
+      setDisplayMoves(true);
+    }else{
+      setDisplayMoves(false);
+    }
+  }
 
   return (
     <div className='pokemon'>
-        {type}
         <h1>{json.name}</h1>
         <img src={json.sprites.front_default} alt="" className='pokemon-profile' />
         <h3>Tipo</h3>
         <ul className='pokemon-type'>
-          {type.map((item, key) => 
-            <li key={key}><Link to={`/type/${item.number}`}>{item.nome}</Link> </li>)}
+          {json.types.map((item, key) => 
+            <li key={key}>{item.type.name}</li>)}
         </ul>
         
-        {/* <button type='button' onClick={showMoves}>
-          {displayMoves ? "Nascondi" : "Mostra"}
-        </button> */}
-        <ul>
+        <button type='button' onClick={showMoves}>{displayMoves && "Nascondi"} {!displayMoves && "Mostra"}</button>
+        {displayMoves && <ul>
           {json.moves.map((item,key)=><li key={key}>{item.move.name}</li>)}
-        </ul>     
+        </ul>}     
       
     </div>
 

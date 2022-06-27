@@ -1,5 +1,10 @@
+html,body{
+  margin: 0;
+  padding: 0;
+}
+
 .img-logo{
-  width: 6%;
+  width: 80px;
   margin-left: 2%;
 }
 
@@ -23,6 +28,7 @@
 body{
   min-height: 100vh;
   background-color: #c6d8fa;
+  overflow: hidden;
 }
 
 .pokemon{
@@ -46,4 +52,59 @@ body{
 
 .pokemon-moves.hidden {
   display: none;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+}
+#root{
+  height: 100vh;
+}
+
+
+.list-container{
+  text-align: center;
+  margin-top: 3%;
+}
+
+.button-container{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5%;
+  width: 100%;
+}
+
+.btn-page{
+  width: 100px;
+  height: 50px;
+  cursor: pointer;
+}
+
+.features-container {
+  margin-top: 5%;
+  width: 100%;
+  display: flex;
+  gap: 5%;
+  justify-content: center;
+}
+
+.features {
+  width: 200px;
+  background-image: url('./assets/sfondoFeatures1.PNG');
+  background-position: center;
+  background-size: cover;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.features-link{
+  color: white;
+  text-decoration: none;
+  font-size: 23px;
 }

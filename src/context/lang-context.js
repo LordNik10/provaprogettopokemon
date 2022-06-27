@@ -6,8 +6,8 @@ export const initialState = {
     language:"it",
     messages:{
         searchPokemon: {
-            it:"Cerca pokemon",
-            en:"Search pokemon"
+            it:"Effettuare Login per accedere alle funzioni",
+            en:"Login to access all function"
         }
     }
 }
