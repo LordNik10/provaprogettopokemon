@@ -5,7 +5,6 @@ html,body{
 
 .img-logo{
   width: 80px;
-  margin-left: 2%;
 }
 
 .navbar{
@@ -28,7 +27,6 @@ html,body{
 body{
   min-height: 100vh;
   background-color: #c6d8fa;
-  overflow: hidden;
 }
 
 .pokemon{
@@ -94,7 +92,6 @@ body{
 
 .features {
   width: 200px;
-  background-image: url('./assets/sfondoFeatures1.PNG');
   background-position: center;
   background-size: cover;
   height: 100px;
@@ -103,8 +100,22 @@ body{
   align-items: center;
 }
 
+.n1{
+  background-image: url('./assets/sfondoFeatures1.PNG');
+}
+
+.n2{
+  background-image: url('./assets/Background.png');
+}
+
 .features-link{
   color: white;
   text-decoration: none;
   font-size: 23px;
+}
+
+.battle-container{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }

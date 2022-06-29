@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import {initialState,langContext} from './context/lang-context';
 import {logged,logInContext} from './context/login';
 import PokemonList from './components/PokemonList';
+import Battle from './components/Battle';
 
 
 
@@ -29,6 +30,7 @@ function App() {
               <Route path='/pokemon/:pokemon' element={<Pokemon />} />
               <Route path='/type/:type' element={<Type />} />
               <Route path='/pokemon/' element={<PokemonList/>}/>
+              <Route path='/pokemon/battle' element={<Battle/>}/>
               <Route path='*' element={<NotFound />} />
             </Routes>  
           </div>
@@ -92,13 +94,13 @@ function Home() {
       {logIn && <div className='features-container'>
         
           <Link to={`/pokemon/`} className='features-link'>
-            <div className="features">
+            <div className="features n1">
               Pokemon List
             </div>
           </Link>  
 
-          <Link to={`*`} className='features-link'>
-            <div className="features">
+          <Link to={`/pokemon/battle`} className='features-link'>
+            <div className="features n2">
               Battle
             </div>
           </Link> 
